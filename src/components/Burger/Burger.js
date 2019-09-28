@@ -8,14 +8,20 @@ const burger = (props) => {
     // 並且回傳由所有的 key 組成的 array
 
     //將 ingredient object 的 key value 轉換成 burger ingredients 的 array
-    const transfromIngredients = Object.keys(props.ingredients)
+    let transfromIngredients = Object.keys(props.ingredients)
         .map(igKey => {
             return [...Array(props.ingredients[igKey])].map((_, i)=>{
                 return <BurgerIngredient key={igKey + i} type={igKey} />
             })
-        });
+        })
+        // 將 return array 合併成一個 array
+        .reduce((arr, el) => {
+            return arr.concat(el);
+        }, []);
+    if(transfromIngredients.length === 0) {
+        transfromIngredients = <p>Please start adding ingredients!</p>
+    }
 
-    console.log(transfromIngredients);
     return (
         <div className={classes.Burger}>
             <BurgerIngredient type="bread-top"/>
