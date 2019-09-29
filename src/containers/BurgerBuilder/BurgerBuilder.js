@@ -9,7 +9,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 const INGREDIENTS_PRICES = {
     salad: 0.5,
     cheese: 0.4,
-    meet: 1.3,
+    meat: 1.3,
     bacon: 0.7
 };
 
