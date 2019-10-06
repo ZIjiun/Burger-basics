@@ -99,6 +99,9 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
         // ex {salad: true, meat: false, ...}
+
+        // OrderSummary 裡面的 prop 如果改變，則需要 re-rendering，
+        // 但是如果畫面上沒有顯示 Modal，其實是可以不用 re-rendering
         return (
             <Aux>
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCancleHandler}>
