@@ -4,7 +4,8 @@ import Aux from '../../hoc/Auxiliary/auxiliary'
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from '../../components/UI/Modal/Modal';
-import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-orders';
 
 const INGREDIENTS_PRICES = {
     salad: 0.5,
@@ -88,7 +89,25 @@ class BurgerBuilder extends Component {
     };
 
     purchaseContinueHandler = () => {
-        alert("You continue");
+        const order = {
+            ingredients: this.state.ingredients,
+            // 總價錢必須在 derver 上面重新計算，以免使用者更改了資料
+            price: this.state.totalPrice,
+            customer: {
+                name: 'Max',
+                address: {
+                    street: 'TestStreet 1',
+                    ZipCode: '41354',
+                    country: 'Germany'
+                },
+                email: 'test@test.com'
+            },
+            deliveryMethod: 'fastest'
+        };
+        // firebase 規定要在最後加上 json
+        axios.post('/orders.json', order)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
     };
 
     render() {
