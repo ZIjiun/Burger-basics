@@ -11,7 +11,6 @@ const controls = [
 ];
 
 const buildControls = (props) => {
-    console.log(props.disabled);
     return (
         <div className={classes.BuildControls}>
             <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
