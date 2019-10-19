@@ -10,7 +10,10 @@ const withErrorHandler = (WrappedComponent, axios) => {
             error: null
         };
 
-        componentDidMount() {
+        // 當使用 componentDidMount 時，因為實際上先 render 完，才會執行 componentDodMount
+        // 所以實際上是沒有設定到這 interceptor，因此改成使用 constructor，在建立物件時就會直接執行
+        constructor(props) {
+            super(props);
             // 確定在送出請求前，是沒有錯誤的
             axios.interceptors.request.use(req => {
                 this.setState({error: null});
