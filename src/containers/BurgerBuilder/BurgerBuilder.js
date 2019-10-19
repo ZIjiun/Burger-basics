@@ -6,6 +6,7 @@ import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const INGREDIENTS_PRICES = {
     salad: 0.5,
@@ -24,7 +25,8 @@ class BurgerBuilder extends Component {
         },
         totalPrice: 4,
         purchasable: false,
-        purchasing: false
+        purchasing: false,
+        loading: false
     };
 
     updatePurchaseState (ingredients) {
@@ -89,6 +91,7 @@ class BurgerBuilder extends Component {
     };
 
     purchaseContinueHandler = () => {
+        this.setState({loading: true});
         const order = {
             ingredients: this.state.ingredients,
             // 總價錢必須在 derver 上面重新計算，以免使用者更改了資料
@@ -106,8 +109,18 @@ class BurgerBuilder extends Component {
         };
         // firebase 規定要在最後加上 json
         axios.post('/orders.json', order)
-            .then(response => console.log(response))
-            .catch(error => console.log(error));
+            .then(response => {
+                this.setState({
+                    loading: false,
+                    purchasing: false
+                })
+            })
+            .catch(error => {
+                this.setState({
+                    loading: false,
+                    purchasing: false
+                })
+            });
     };
 
     render() {
@@ -117,6 +130,17 @@ class BurgerBuilder extends Component {
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
+
+        let orderSummary = <OrderSummary
+                ingredients={this.state.ingredients}
+                price={this.state.totalPrice}
+                purchaseCancelled={this.purchaseCancleHandler}
+                purchaseContinued={this.purchaseContinueHandler}/>;
+
+        if (this.state.loading) {
+            orderSummary = <Spinner/>
+        }
+
         // ex {salad: true, meat: false, ...}
 
         // OrderSummary 裡面的 prop 如果改變，則需要 re-rendering，
@@ -124,12 +148,7 @@ class BurgerBuilder extends Component {
         return (
             <Aux>
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCancleHandler}>
-                    <OrderSummary
-                        ingredients={this.state.ingredients}
-                        price={this.state.totalPrice}
-                        purchaseCancelled={this.purchaseCancleHandler}
-                        purchaseContinued={this.purchaseContinueHandler}
-                        />
+                    {orderSummary}
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
