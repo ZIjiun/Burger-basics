@@ -18,6 +18,14 @@ const burger = (props) => {
         .reduce((arr, el) => {
             return arr.concat(el);
         }, []);
+
+    // 上面程式的另一種寫法
+    // for (let key in props.ingredients) {
+    //     for (let i = 0; i < props.ingredients[key]; i++) {
+    //         transformedIngredients.push(<BurgerIngredient key={key + i} type={key} />);
+    //     }
+    // }
+
     if(transfromIngredients.length === 0) {
         transfromIngredients = <p>Please start adding ingredients!</p>
     }
